@@ -1,0 +1,2218 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+	<meta name="generator" content="pandoc" />
+	
+	<link rel="stylesheet" type="text/css" href="3ml.css">
+
+	<title>A DevSecOps Friendly XML, Why not ?</title>
+	
+	<style>
+	</style>
+
+</head>
+
+<body>
+
+<h1 class="doc-title-heading">3ML</h1>
+
+<h2 class="doc-title-heading">A human readable semi-structured markup language</h2>
+
+
+<h2 class="doc-title-heading">Work in progress</h2>
+<h2 class="doc-title-heading">April 2018</h2>
+
+<h3 class="doc-title-heading">Presentation&nbsp;:&nbsp;<a class="active_not" href="https://3ml.io">https://3ml.io</a></h3><!--  -->
+<h3 class="doc-title-heading">Documentation&nbsp;:&nbsp;<a class="active_not" href="https://3ml.io/docs">https://3ml.io/docs</a></h3><!--  -->
+<h3 class="doc-title-heading">Download repository&nbsp;:&nbsp;<a class="active_not" href="https://3ml.io/downloads">https://3ml.io/downloads</a></h3>
+<h3 class="doc-title-heading">Specifications&nbsp;:&nbsp;<a class="active_not" href="https://devsecops.3ml.io/specifications">https://devsecops.3ml.io/specifications</a></h3>
+<h3 class="doc-title-heading">Report error and issues&nbsp;:&nbsp;<a class="active_not" href="https://devsecops.3ml.io/issues">https://devsecops.3ml.io/issues</a></h3>
+
+<!--
+
+
+<h3 class="doc-title-heading">Schemas are&nbsp;:&nbsp;<a class="active_not" href="https://schema.3ml.io/&lt;level&gt;">https://schema.3ml.io/&lt;level&gt;</a></h3>
+
+
+<ul class="no-bullet dev doc-title-heading" class="bare">
+	<li>Specifically</li>
+	<ul class="no-bullet">
+		<li><span class="em">/std</span>
+			<br>Accurately based on published standards 
+			<br>Might have sub-folder. See /index.html
+		</li>
+		<li><span class="em">/facto</span>
+			<br>Accurately based on de facto standards 
+		</li>
+		<li><span class="em">/pop</span>
+			<br>Accurately based on popular models 
+		</li>
+		<li><span class="em">/org/&lt;org_name&gt;</span>
+			<br>Accurately based on  an organization's subscribed models 
+		</li>
+		<li><span class="em">/public/&lt;gov&gt;&hellip;</span>
+			<br>Accurately based on  public subscribed models 
+		</li>
+	</ul>
+</ul>
+
+Is it valid for a hostname to start with a digit?
+	http://9292.nl/
+		route planner for Dutch public transportation
+
+-->
+
+<h2 class="doc-title-heading">Version : Alpha</h2>
+
+<h2 class="doc-title-heading">Content</h2>
+
+<ol class="toc">
+	<li><a href="#motivation">Motivation</a></li>
+	<li><a href="#doc-format">This document format</a>
+		<ol>
+			<li><a href="#syntax-format">3ML Syntax format</a></li>
+		</ol>
+	</li>
+	<li><a href="#conformance">Conformance</a></li>
+	<li><a href="#scope">Scope</a>
+		<ol>
+			<li><a href="#doc-scope">This document</a>
+				<ol>
+					<li><a href="#doc-scope-is">Is</a></li>
+					<li><a href="#doc-scope-is-not">Is not</a></li>
+				</ol>
+			</li>
+		</ol>
+		<ol>
+			<li><a href="#3ml-scope">The 3ML markup language</a>
+				<ol>
+					<li><a href="#3ml-scope-is">Is</a></li>
+					<li><a href="#3ml-scope-is-not">Is not</a></li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li><a href="#goals">Goals</a></li>
+	<li><a href="#guidelines">Principles or guidelines used or inspired from</a></li>
+	<li><a href="#standards">Standards or popular solutions used or inspired from</a></li>
+		<ol>
+			<li><a href="#inspir-xml">Type of information inspired from XML (XML Infoset)</a>
+				<ol>
+					<li><a href="#abbreviation-description">Abbreviation Description table</a></li>
+					<li><a href="#doc-scope-is-not">Type of Information table</a></li>
+				</ol>
+			</li>
+		</ol>
+	<li><a href="#features">Features and their respective inspirations</a></li>
+	<li><a href="#syntax">Syntax decomposition</a></li>
+	<li><a href="#schema">Core Schemas List</a></li>
+	<li><a href="#operations">Operations</a></li>
+	<li><a href="#references">References</a></li>
+	<li><a href="#acknowledgements">Acknowledgements</a></li>
+</ol>
+
+<h2>1 <a name="motivation"></a>Motivation</h2>
+
+<h3><a name="motivation-need"></a>1.1 Need for a human readable semi-structured markup language</h3>
+
+<p>
+	
+</p>
+
+
+<p>
+	If we define a <em>human readable semi-structured markup language</em> as follow&nbsp;:
+</p>
+<p>
+	<em>Human readable</em>&nbsp;: 
+	It uses more letters and digits than other characters because they are easier to read. 
+	When it uses non alphanumerical characters, it will be those easy to type&nbsp;: 
+	equal, slash and backslah, plus, dash, star, sharp, period.
+</p>
+<p>
+	<em>Semi-structured</em>&nbsp;: 
+	The two category of uses are schema and data containment.
+</p>
+<p>
+	<em>Markup</em>&nbsp;: 
+	Markups can be spreaded like a template, or be structured in a hierarchical fashion. 
+	Because use case are beyond HTML/XML needs (configurations, data transmissions, etc), 
+	the hierarchical style has been choosen while remain template capable.
+</p>
+<p>
+	<em>Language</em>&nbsp;: 
+	A language, if we want it to be used, it should follow the evolution of the use cases.
+	It should not be hard to evolve. 
+	It can be as extensible as XML for example.
+</p>
+
+
+
+<p>
+	A "lot" of semi-structured markup language exist (<a href="">see Lists or surveys of markup languages</a>). 
+	XML dominates all by its completeness (<a href="#motivation-xml-benefit">see XML benefits</a>) but not its simplicity (<a href="#motivation-xml-drawbacks">see XML drawbacks</a>). 
+	
+</p>
+
+<h3><a name="motivation-markup-languages-lists"></a>1.2 Lists or surveys of markup languages</h3>
+
+<!--
+
+Notation3
+	https://en.wikipedia.org/wiki/Notation3
+
+
+
+-->
+
+Wayback Machine
+	XML Alternatives
+		http://web.archive.org/web/20060118112014	/http://www.pault.com:80/pault/pxml/xmlalternatives.html
+
+<h3><a name="motivation-xml-benefit"></a>1.3 Benefits of XML</h3>
+
+Benefits Of Xml - Cunningham & Cunningham, Inc - Ward Cunningham
+	http://wiki.c2.com/?BenefitsOfXml
+https://en.wikipedia.org/wiki/XML#Criticism
+
+
+<h3><a name="motivation-xml-drawbacks"></a>1.4 Drawbacks of XML</h3>
+
+Xml Is Too Complex - Cunningham & Cunningham, Inc - Ward Cunningham
+	http://wiki.c2.com/?XmlIsTooComplex
+Xml Sucks
+	http://wiki.c2.com/?XmlSucks
+
+
+<h2><a name="doc-format"></a>2 This document format</h2>
+
+<h3><a name="syntax-format">2.1 3ML Syntax format</a></h3>
+
+<ul>
+		<li>The elements (non leaves) are Backus-Naur broken until leaves.</li>
+		<li>"<code>{ }</code>" are used to designate a vertex of the Backus-Naur tree.</li>
+		<li>"<code>( )</code>" are used to designate a leaf of the Backus-Naur tree.
+		<br>&emsp;&emsp;Leaves are mapped to characters, string or sets in the <em>Proposed and Voted Special Characters and Character Sets</em> table.</li>
+		<li>"<code>a..b</code>" are used to express cardinality.
+		<br>&emsp;&emsp;1..1 or 1 is default thus omitted.</li>
+</ul>
+
+<h4 id="example">2.1.1 Example:</h4>
+
+<p><code>{Header}(Header-value Separator){content 0..1}</code></p>
+<p>&emsp;&emsp;Thus "<code>0..1</code>" means here an optional element</p>
+
+<h2>3 <a name="conformance"></a>Conformance</h2>
+
+<p>This specification use the conformance key words from this Request For Comments&nbsp;: <a href="https://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a>, except <em>shall not</em>, as validation qualifiers.</p>
+
+<p>These key words are&nbsp;: <em>Required</em>, <em>Recommended</em>, <em>Not Recommended</em> and <em>Avoid</em> (more clear than <em>shall not</em>)</p>
+
+<p>These conformance key words are transferred from the section's pre-requirement section. If inferred or created they must be supported by referenced argument[s].</p>
+
+<p>These key words are used to group listed requirements (in tables) in priority order. Their meaning may be contextualized in their respective section.</p>
+
+<p>All exemples are not normative.</p>
+
+<p>The words <em>Used</em> and <em>Inspired</em>, qualify each source of arguments.</p>
+
+
+
+
+<h2>4 <a name="scope"></a>Scope</h2>
+
+<h3 id="doc-scope">4.1 This document</h3>
+
+<h4 id="doc-scope-is">4.1.1 Is</h4>
+
+<p>This document describe the specifications of the 3ML and its argumentation regarding the choices made.</p>
+
+<h4 id="doc-scope-is-not">4.1.2 Is not</h4>
+
+<p>No algorithms or software are described nor suggested. If so they will have their own respective specification.</p>
+
+<h3 id="3ml-scope">4.2 The 3ML markup language</h3>
+
+<h4 id="3ml-scope-is">4.2.1 Is</h4>
+
+<p>3ML is a declarative markup language mostly inspired by the XML.</p>
+
+<p>Other inspirations are&nbsp;:</p>
+<ul class="no-bullet">
+		<li>JSON
+			<ul>
+				<li><a href="">Wikpedia</a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+			</ul>
+		</li>
+		<li>JSON Schema
+			<ul>
+				<li><a href="">Wikpedia</a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+			</ul>
+		</li>
+</ul>
+<p>Anti-inspirations are&nbsp;:</p>
+<ul>
+		<li>YAML
+			<ul>Lack of modular pattern that may hinder evolutivity.
+				<li><a href="">Wikpedia</a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+			</ul>
+		</li>
+		<li>Markdown&nbsp;: Same as YAML
+			<ul>
+				<li><a href="">Wikpedia</a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+			</ul>
+		</li>
+</ul>
+
+
+<p>basically structured in a parent-child fashion except for the <em>physical</em> container which has two sequential sections : the header and the content which in their turn has parent-child structure as content. Some features such as templating are structured in a placeholder fashion instead.</p>
+<p>The <em>physical</em> containers can be file, databases, variables, etc. The logical containers are nodes. Content can be node or text. Embedded binairies are not supported yet but can be described or pointed to.</p>
+<p>3ML main focus and corner stones are the nodes. Even the <em>physical</em> containers can be designated as nodes.</p>
+
+<h4 id="3ml-scope-is-not">4.2.2 Is not</h4>
+
+<p>3ML is not a procedural but may describe a process using sibling nodes sequence as steps.</p>
+
+<h2 id="goals">5 <a name="goals"></a>Goals</h2>
+
+<p>These qualities or goals for this declarative markup language design are inspired from these sources.</p>
+
+<ul>
+	<li><a href="https://www.scirp.org/journal/PaperInformation.aspx?PaperID=36237">Measuring Qualities of XML Schema Documents</a>
+	&emsp;<br>This document +++++++++++++</li>
+	<li><a href="https://eprints.soton.ac.uk/252926/">Applying measurement principles to improve hypermedia authoring</a>
+	&emsp;<br>This document suggest a method to measure hypermedia applications. <a href="">Metrics_for_XML_Document_Collections</a> <br>Read the warning in the Summary section.</li>
+	<li><a href="https://stph.scenari-community.org/doc/sch/co/dtdUC15.html">Inconvénients et avantages des DTD</a>
+	&emsp;<br>This document ++++++++++++++++++++</li>
+	<li><a href="https://en.wikipedia.org/wiki/Working_memory#Capacity">Working memory (Wikipedia)</a></li>
+	<li><a href="https://en.wikipedia.org/wiki/List_of_system_quality_attributes#Common_subsets">List of system quality attributes</a>
+	&emsp;<br>This document ++++++++++++++++++++</li>
+	<li><a href="https://www.iso.org/standard/35733.html">ISO/IEC 25010:2011</a></li>
+	<li><a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.57.7387">A Few Tips for Good XML Design</a></li>
+	<li><a href="http://xml.coverpages.org/HP-StephensonSchemaBestPractices.pdf">XML Schema best practices</a></li>
+</ul>
+
+<table>
+	<tr>
+		<th>
+			Validation level/
+			<br>/Goal, quality
+		</th>
+		<th>
+			Motivation
+		</th>
+	</tr>
+	<tr>
+		<td colspan=99>
+			<strong>Essential</strong>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Reusable
+		</td>
+		<td>
+			Decrease development and maintenance burden.
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Extensible
+		</td>
+		<td>
+			Allow for evolution by extension.
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Simple<br>(as possible)
+		</td>
+		<td>
+			To human especially.
+			<br>Allow simpler algorithms to interpret and process data and structure.
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Easely human readable
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td colspan=99>
+			<strong>Recommended</strong>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=99>
+			<strong>Nice</strong>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=99>
+			<strong>? Avoid</strong>
+			<br>(Antipattern)
+		</td>
+	</tr>
+	<tr>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+</table>
+
+<h2>6 <a name="guidelines"></a>Principles or guidelines used or inspired from</h2>
+
+<p>[ ] Sécu =&gt; def.(?(hidden) , injected : delta)</p>
+
+
+<table>
+	<tr>
+		<th>
+			Validation level/
+			<br>Principles or guidelines
+			<br>(Priority order)
+		</th>
+		<th>
+			Motivation
+		</th>
+	</tr>
+	<tr>
+		<td colspan=99>
+			<strong>Essential</strong>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			DevSecOps approach
+		</td>
+		<td>
+			<a href="https://en.wikipedia.org/wiki/DevSecOps">Wikipedia</a>
+			<br><a href="http://www.devsecops.org/">www.devsecops.org</a>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Agile software development
+		</td>
+		<td>
+			<a href="https://en.wikipedia.org/wiki/Agile_software_development">Wikipedia</a>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=99>
+			<strong>Recommended</strong>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=99>
+			<strong>Nice</strong>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+</table>
+
+
+
+<h2>7 <a name="standards"></a>Standards or popular solutions used or inspired from</h2>
+
+<h4>7.1 <a name="infoset"></a>Type of information inspired from XML (<a href="https://en.wikipedia.org/wiki/XML_Information_Set">XML Infoset</a>)</h4>
+
+<ul>
+<li>[ ] metatype : structure.(container , content , lnk , rel)</li>
+</ul>
+
+<h5>7.1.1 <a name="infoset"></a> Abbreviation Description table</h5>
+
+<table>
+	<tr>
+		<th>
+			Abbreviation
+		</th>
+		<th>
+			Description
+		</th>
+	</tr>
+	<tr>
+		<td>
+			DocStruc
+		</td>
+		<td>
+			Document Structure
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Syn
+		</td>
+		<td>
+			Synonym
+		</td>
+	</tr>
+	<tr>
+		<td>
+			NodeDef
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Proc
+		</td>
+		<td>
+			Process
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Elem
+		</td>
+		<td>
+			Element
+		</td>
+	</tr>
+	<tr>
+		<td>
+			N3C
+		</td>
+		<td>
+			Non 3ML code or value
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Char
+		</td>
+		<td>
+			Character
+		</td>
+	<tr>
+		<td>
+			Cmt
+		</td>
+		<td>
+			Comment
+		</td>
+	<tr>
+		<td>
+			CmtOut
+		</td>
+		<td>
+			Comment out
+		</td>
+	</tr>
+	<tr>
+		<td>
+			EI
+		</td>
+		<td>
+																																					
+		</td>
+	</tr>
+	<tr>
+		<td>
+			NS
+		</td>
+		<td>
+			Name Space
+		</td>
+	</tr>
+	<tr>
+		<td>
+			C
+		</td>
+		<td>
+			Container
+		</td>
+	</tr>
+	<tr>
+		<td>
+			c
+		</td>
+		<td>
+			Content
+		</td>
+	</tr>
+	<tr>
+		<td>
+			L
+		</td>
+		<td>
+			Link
+		</td>
+	</tr>
+</table>
+
+<h5 id="type-of-information-inspired-from-xml">7.1.2 Type of Information table</h5>
+
+<table>
+	<tr>
+		<th>
+			Validation level/
+			<br>Information
+		</th>
+		<th>
+			Code
+		</th>
+		<th>
+			Abbrev.
+		</th>
+		<th>
+			Description
+		</th>
+	</tr>
+	<tr>
+		<td colspan=99>
+			<strong>Essential</strong>
+		</td>
+	</tr>
+	<tr>
+
+		<td>
+			Document
+		</td>
+		<td>
+			Container
+		</td>
+		<td>
+			DocStruc
+			<br>Syn
+			<br>NodeDef
+		</td>
+		<td>
+			Assimilated to the version of the 3ML used for the document structure and its syntax,
+			<br>and to the node definition.
+			<br>See <em>The <strong>Document Type Declaration</strong> Information Item below</em>.
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Pragma
+		</td>
+		<td>
+			Proc
+		</td>
+		<td>
+			Instructions about how to process the document.
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Node
+		</td>
+		<td>
+			Elem
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			The tag element of the structured hypertext.++++
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Non 3ML content
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			N3C
+		</td>
+		<td>
+			Attribute of an element.
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Character
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			Char
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<strong>Comment</strong> Information Items
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			Cmt
+			<br>CmtOut
+		</td>
+		<td>
+			Side information not intended for processing.
+			<br>Comment out is assimilated to a node &quot;deactivation&quot; for good practice reasons.
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<strong>Document Type Declaration</strong> Information Item
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			N/A
+		</td>
+		<td>
+			See <em>The <strong>Document Information</strong> Item</em> above.
+		</td>
+	</tr>
+	<tr>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			Allow escaping special meaning characters.
+			<br>Allow precise specification of visually ambiguous glyphs or characters.
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<strong>Unparsed Entity</strong> Information Items
+			<br>
+		</td>
+		<td>
+			
+		</td>
+		<td>EI
+			
+		</td>
+		<td>
+			Allow textual and non textual information to be referred.
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<strong>Namespace</strong> Information Items
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			NS
+		</td>
+		<td>
+			Any identifier is unique only in his namespace.
+			<br>Good practice is to have a clear knowledge of each implicit namespace.++++ref
+		</td>
+	</tr>
+	<tr>
+		<td colspan=99>
+			<strong><em>Recommended</em></strong>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=99>
+			<strong><em>Nice</em></strong>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=99>
+			<strong>Avoid</strong><br>(Antipattern)
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<strong>Notation</strong> Information Items
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			N/A
+		</td>
+		<td>
+			Not inspired from (deprecated).
+		</td>
+	</tr>
+	<tr>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+</table>
+
+<h2 id="features-and-their-respective-inspirations">8 <a name="features"></a>Features and their respective inspirations</h2>
+
+<h3 id="columns-description-table-1">8.1 Columns description table</h3>
+
+<table>
+	<tr>
+		<th>
+			Column
+		</th>
+		<th>
+			Code
+		</th>
+		<th>
+			Category of strategy
+		</th>
+	</tr>
+	<tr>
+		<td>
+			Definition of relationship
+		</td>
+		<td >
+			Rel
+		</td>
+		<td >
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Assignment
+		</td>
+		<td >
+			Asg
+		</td>
+		<td >
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Structure
+		</td>
+		<td >
+			Str
+		</td>
+		<td >
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Sequence of execution
+		</td>
+		<td >
+			Seq
+		</td>
+		<td >
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Expressions and definitions as values
+		</td>
+		<td >
+			Expr
+		</td>
+		<td >
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Control
+		</td>
+		<td >
+			Ctrl
+		</td>
+		<td >
+			
+		</td>
+	</tr>
+</table>
+
+<h3 id="features-table">8.2 Features table</h3>
+
+<table>
+	<tr>
+		<th>
+			Validation level/
+			<br>Strategy
+		</th>
+		<th>
+			Type of
+			<br>inform.
+		</th>
+		<th>
+			Description
+			<br>Note
+			<br>Implementation
+		</th>
+		<th>
+			Goal(s)/
+			<br>Principle(s)/
+			<br>Standard(s)
+		</th>
+	</tr>
+	<tr>
+		<td>
+			<strong>Essential</strong>
+		</td>
+		<td colspan=3>
+			<em>These features are essential in respect to their inspiration sources.</em>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Node definition reuse
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			Each node can reuse other node definition as in ++++prototyping
+		</td>
+		<td>
+			Reusability
+			<br>++++Modularity
+		</td>
+	</tr>
+	<tr>
+		<td>
+			File header and body
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			Logical content decoupled from physical container (file, stream, etc)
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			File header can be signed separately from the content
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			Limited number of symbols.<br>Limited number of special characters.<br>Limited structure complexity.
+		</td>
+		<td>
+			++++Tersability
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Separation of 3ML and non 3ML
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			Node structure and content separator.<br>Anything between them except the line separator.
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Prototyping rather than inheritance
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Separation of container syntax from content
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Node hierarchy
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Node composition and prototyping
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			Referential integrity
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Hierarchical structure
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			Node are container and can contain node(s).
+		</td>
+		<td>
+			Referential integrity
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Sequence
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			Sibling nodes of a given container can be parsed as sequence of nodes.
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Network structure
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			Child node can refer to another node and thus allow for composition.
+		</td>
+		<td>
+			Referential integrity
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<strong>Recommended</strong>
+		</td>
+		<td colspan=3>
+			<em>These features are recommended in respect to their inspiration sources.</em>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<strong>Nice</strong>
+		</td>
+		<td colspan=3>
+			<em>These features are nice in respect to their inspiration sources.</em>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+</table>
+
+
+ | | | |||Each node can reuse other node definition as in ++++prototyping|Reusability <br>++++Modularity |File header and body||Logical content decoupled from physical container (file, stream, etc) |||File header can be signed separately from the content |||Limited number of symbols.<br>Limited number of special characters.<br>Limited structure complexity.|++++Tersability |Separation of 3ML and non 3ML||Node structure and content separator.<br>Anything between them except the line separator. |Prototyping rather than inheritance |Separation of container syntax from content |Node hierarchy |Node composition and prototyping|||Referential integrity |Hierarchical structure||Node are container and can contain node(s).|Referential integrity |Sequence||Sibling nodes of a given container can be parsed as sequence of nodes.| |Network structure||Child node can refer to another node and thus allow for composition.|Referential integrity |<strong>Recommended</strong>
+<td colspan=99>
+<em>These features are recommended in respect to their inspiration sources.</em> |<strong>Nice</strong>
+<td colspan=99>
+<p><em>These features are nice in respect to their inspiration sources</em></p>
+
+<h2 id="syntax-decomposition">9 <a name="syntax"></a>Syntax decomposition</h2>
+
+<h3 id="main-structures">9.1 Main structures</h3>
+
+<table>
+	<tr>
+		<th>
+			Element
+		</th>
+		<th>
+			Components
+		</th>
+		<th>
+			Example
+		</th>
+	</tr>
+	<tr>
+		<td>
+			Node
+			<br>structure
+		</td>
+		<td>
+			<em>One of these:</em>
+			<br>&emsp;Single line node : 
+			<br>&emsp;&emsp;<code>(<a href="#l-whsp">Whsp</a> 0..n){<a href="#v-head">Head</a>}(<a href="#v-eo-head">EO-Head</a>){<a href="#v-content">Content</a> 0..1)(<a href="#l-eol">EOL</a>)</code>
+			<br>&emsp;Multiple line node: 
+			<br>&emsp;&emsp;<code>(Whsp 0..n){Head}(EOL)</code> 
+			<br>&emsp;&emsp;&emsp;<code>(Whsp 0..n){Content 0..1)(EOL)</code>
+			<br>&emsp;&emsp;<code>(Whsp 0..n){<a href="#v-tail">Tail</a>}(EOL)</code>
+		</td>
+		<td>
+			<em>One of these:</em>
+			<br>&emsp;Single line node :
+			<br>&emsp;&emsp;<code>/NodeName =value</code>
+			<br>
+			<br>&emsp;Multiple line node: 
+			<br>&emsp;&emsp;<code>/NodeName</code>
+			<br>&emsp;&emsp;&emsp;<code>content</code>
+			<br>&emsp;&emsp;&emsp;<code>...</code>
+			<br>&emsp;&emsp;<code>\</code>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			File
+			<br>structure
+		</td>
+		<td>
+			<code>(<a href="#l-bon">BON</a>){<a href="#v-eol-declaration">EOL Declaration</a>}</code>
+			<br><code>{<a href="#v-3ml-version-node">3ML Version Node</a>}</code>
+			<br><code>&emsp;{<a href="#v-preprocessing-block">Preprocessing Block</a> 0..1}</code>
+			<br><code>&emsp;{<a href="#v-placeholder-block">Placeholder Block</a> 0..1}</code>
+			<br><code>{<a href="#v-content">Content</a> 0..1}</code>
+		</td>
+		<td>
+
+		<code>/</code>
+		<br><code>/ver =0.0.5</code>
+		<br><code>/pre</code>
+		<br>&emsp;<code>/valid-mult =override</code>
+		<br><code>\</code>
+		<br><code>/ph</code>
+		<br>&emsp;<code>/ns</code>
+		<br>&emsp;&emsp;<code>/namespace1 =http...</code>
+		<br>&emsp;<code>\</code>
+		<br>&emsp;<code>/rg</code>
+		<br>&emsp;&emsp;<code>/regex1 @:perl:lang:regex</code>
+		<br>&emsp;<code>\</code>
+		<br><code>\</code>
+		<br><code>/documentNode</code>
+		<br>&emsp;<code>Document content</code>
+		<br>&emsp;<code>...</code>
+		<br><code>\</code>
+		</td>
+	</tr>
+</table>
+
+
+<h3 id="other-structures">9.2 Other structures</h3>
+
+<table>
+	<tr>
+		<th>
+			Element
+		</th>
+		<th>
+			Components/
+			<br>Reference
+		</th>
+		<th>
+			Example
+			<br>if applicable/
+			<br>note
+		</th>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-3ml-regex"></a>3ML Regex
+		</td>
+		<td>
+			See <a href="3ML Regex~0.a.1.html">3ML Regex</a>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-3ml-version-code"></a>3ML Version Code
+		</td>
+		<td>
+			See <a href="#3mlsemver">3ML Semantic Version Model</a>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-3ml-version-node"></a>3ML Version Node
+		</td>
+		<td>
+			<code>(<a href="#l-bon">BON</a>)(<a href="#l-3ml-version-id">3ML Version Id</a>) {<a href="#v-eo-head">EO-Head</a>}{<a href="#v-3ml-version-code">3ML Version Code</a>}(<a href="#l-eol">EOL</a>)</code>
+		</td>
+		<td>
+			<code>/ver =0.0.5</code>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-3mlink"></a>3MLink
+		</td>
+		<td>
+			See <a href="#3MLink~0.a.1.html">3MLink</a>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-array"></a>Array
+		</td>
+		<td>
+			<code>(<a href="#l-arrayflag">ArrayFlag</a>)(<a href="#l-arraysepdeclaration">ArraySepDeclaration</a>)</code>
+		</td>
+		<td>
+			<code>#;=value1;value2</code>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-boh"></a>BOH
+			<br>(Begin of Header)
+		</td>
+		<td>
+			<code>(<a href="#l-cancel">Cancel</a> 0..1){<a href="#v-card">Card</a> 0..1}</code>
+		</td>
+		<td>
+			<code>/*+0,1 </code>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-card"></a>Cardinality
+		</td>
+		<td>
+			<code>(<a href="#l-cardinality-flag">CardinalityFlag</a>)(<a href="#l-occurencemin">OccurenceMin</a>){<a href="#v-occurencemaxstruc">OccurenceMaxStruc</a> 0..1}</code>
+		</td>
+		<td>
+			<code>+0,2</code>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-content"></a>Content
+		</td>
+		<td>
+			<em>One of these:</em>
+			<br>&emsp;<code>(<a href="#l-non-3ml-content">Non-3ML Content</a>)</code>
+			<br>&emsp;3ML Node
+			<br>
+			<br><em>If file has more than one root node, it is a library</em>.
+			<br><strong><em>++++ if allow library, file container is a node.</em>
+			<br><strong><em>++++ binary ???</em>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-defined-placeholder-block"></a>Defined Placeholder Block
+		</td>
+		<td>
+			<code>(<a href="#l-bon">BON</a>)(<a href="#l-special-placeholder-block-id">Special Placeholder Block Id</a>)(<a href="#l-eol">EOL</a>)</code>
+			<br>&emsp;<em>Any of these:</em>
+			<br>&emsp;&emsp;<code>{<a href="#v-namespace-block">Namespace Block</a> 0..1}</code>
+			<br>&emsp;&emsp;<code>{<a href="#v-regex-block">Regex Block</a> 0..1}</code>
+			<br>&emsp;&emsp;<em>Other special placeholder to come</em>
+			<br><code>{<a href="#v-tail">Tail</a>}</code>
+		</td>
+		<td>
+		</td>
+		</tr>
+	<tr>
+		<td>
+			<a name="v-defined-placeholder-node"></a>Defined Placeholder Node
+		</td>
+		<td>
+			<code>(<a href="#l-bon">BON</a>)(<a href="#l-id">Id</a>){<a href="#v-valid">Valid</a> 0..1} {<a href="#v-eo-head">EO-Head</a>}(<a href="#v-content">Content</a>)(<a href="#l-eol">EOL</a>)</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-eo-head"></a>EO-Head
+		</td>
+		<td>
+			<em>One of these:</em>
+			<br>&emsp;<code>(<a href="#l-non-3mlink-content-flag">Non-3MLink-content Flag</a>)</code>
+			<br>&emsp;<code>(<a href="#l-3mlink-content-flag">3MLink-content Flag</a>)</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-eol-declaration"></a>EOL Declaration
+		</td>
+		<td>
+			<em>Any byte or character or string except these:</em>
+			<br>&emsp;<em>Core flags:</em>
+			<br>&emsp;&emsp;<code>(<a href="#l-bon">BON</a>)</code>
+			<br>&emsp;&emsp;<code>(<a href="#l-eon">EON</a>)</code>
+			<br>&emsp;&emsp;<code>(<a href="#l-escape-flag">Escape Flag</a>)</code>
+			<br><em>Choose wisely.</em>
+			<br><em>Security:</em>
+			<br>&emsp;&emsp;<em>Define constraint or lock,
+			<br>&emsp;&emsp;in configuration of both 3ML Parser and client.</em>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-head"></a>Head
+		</td>
+		<td>
+			<br><code class="condensed">(<a href="#l-bon">BON</a>){<a href="#v-boh">BOH</a> 0..1}(<a href="#l-id">Id</a>){<a href="#v-verstruct">VerStruct</a> 0..1}{<a href="#v-valid">Valid</a> 0..1}{<a href="#l-arrayflag">ArrayFlag</a> 0..1}</code>
+		</td>
+		<td>
+			<code>NodeName~0.0.5 :NS1:/path/Schema #,</code>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-namespace"></a>Namespace
+		</td>
+		<td>
+			<br><code>(<a href="#l-id">Id</a>)(<a href="#l-eo-namespace">EO-Namespace</a>)</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-namespace-block"></a>Namespace Block
+		</td>
+		<td>
+			<code>(<a href="#l-whsp">Whsp</a>)(<a href="#l-bon">BON</a>)(<a href="#l-namespace-block-id">Namespace Block Id</a>)(<a href="#l-eol">EOL</a>)</code>
+			<br>&emsp;<code>{<a href="#v-namespace-node">Namespace Node</a>}</code>
+			<br><code>(<a href="#l-whsp">Whsp</a>){<a href="#v-tail">Tail</a>}</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-namespace-node"></a>Namespace Node
+		</td>
+		<td>
+			<br><code>(<a href="#l-whsp">Whsp</a> 2)(<a href="#l-bon">BON</a>)(<a href="#l-id">Id</a>){<a href="#v-valid">Valid</a> 0..1} (<a href="#l-3mlink-content-flag">3MLink Content-Flag</a>){<a href="#v-3mlink">3MLink</a>}(<a href="#l-eol">EOL</a>)</code>
+		</td>
+		<td>
+
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-occurencemaxstruc"></a>OccurenceMaxStruc
+		</td>
+		<td>
+			<br><code>(<a href="#l-occurence-separator">Occurence Separator</a>)(<a href="#l-occurencemax">OccurenceMax</a>)</code>
+		</td>
+		<td>
+			Must be omitted if equal to <em>OccurenceMin</em>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-other-regex"></a>Other Regex
+		</td>
+		<td>
+			<em>One of these:</em>
+			<br>&emsp;See <a href="">Perl Regex</a>
+			<br>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-placeholder-block"></a>Placeholder Block
+		</td>
+		<td>
+			<code>(<a href="#l-bon">BON</a>)(<a href="#l-placeholder-block-id">Placeholder Block Id</a>)(<a href="#l-eol">EOL</a>)</code>
+			<br><em>Any of these:</em>
+			<br>&emsp;<code>{<a href="#v-defined-placeholder-block">Defined Placeholder Block</a> 0..1}</code>
+			<br>&emsp;<code>{<a href="#v-user-defined-placeholder-block">User Defined Placeholder Block</a> 0..1}</code>
+			<br><code>{<a href="#v-tail">Tail</a>}</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-preprocessing-block"></a>Preprocessing Block
+		</td>
+		<td>
+			<br><code>(<a href="#l-whsp">Whsp</a>)(<a href="#l-bon">BON</a>)(<a href="#l-preprocessing-block-id">Preprocessing Block Id</a>)(<a href="#l-eol">EOL</a>)</code>
+			<br>&emsp;<code>{<a href="#v-preprocessing-node">Preprocessing Node</a>}</code>
+			<br>&emsp;<code>...</code>
+			<br><code>{<a href="#v-tail">Tail</a>}</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-preprocessing-node"></a>Preprocessing Node
+		</td>
+		<td>
+			<br><code>(<a href="#l-bon">BON</a>)(<a href="#l-preprocessing-id">Preprocessing Id</a>){<a href="#v-eo-head">EO-Head</a>}(<a href="#v-content">Content</a>)(<a href="#l-eol">EOL</a>)</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-regex-block"></a>Regex Block
+		</td>
+		<td>
+			<code>(<a href="#l-whsp">Whsp</a>)(<a href="#l-bon">BON</a>)(<a href="#l-namespace-block-id">Namespace Block Id</a>)(<a href="#l-eol">EOL</a>)</code>
+			<br>&emsp;<code>{<a href="#v-regex-node">Regex Node</a>}</code>
+			<br><code>(<a href="#l-whsp">Whsp</a>){<a href="#v-tail">Tail</a>}</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-regex-content"></a>Regex Content
+		</td>
+		<td>
+			<em>One of these:</em>
+			<br>&emsp;<code>{<a href="#v-3ml-regex">3ML Regex</a>}</code>
+			<br>&emsp;<code>{<a href="#v-other-regex">Other Regex</a>}</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-regex-node"></a>Regex Node
+		</td>
+		<td>
+			<br><code>(<a href="#l-whsp">Whsp</a> 2)(<a href="#l-bon">BON</a>)(<a href="#l-id">Id</a>){<a href="#v-valid">Validation 0..1</a>} (<a href="file:///home/bernardc/Documents/projets/3ML/specification~0.a.5.md.html#l-3mlink-content-flag">3MLink Content Flag</a>){<a href="#v-regex-content">Regex Content</a>}(<a href="#l-eol">EOL</a>)</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+		<tr>
+		<td>
+			<a name="v-user-defined-placeholder-block"></a>User Defined Placeholder Block
+		</td>
+		<td>
+			<p><code>(<a href="#l-whsp">Whsp</a>)(<a href="#l-bon">BON</a>)(<a href="#l-user-defined-placeholder-block-id">User Defined Placeholder Block Id</a>)(<a href="#l-eol">EOL</a>)</code> 
+			<br>&emsp;<code>{<a href="#v-user-defined-placeholder-node">User Defined Placeholder Node</a> 1..n}</code> 
+			<br><code>(<a href="#l-whsp">Whsp</a>){<a href="#v-tail">Tail</a>}</code></p>
+			</td>
+		</tr>
+	<tr>
+		<td>
+			<a name="v-user-defined-placeholder-node"></a>User Defined Placeholder Node
+		</td>
+		<td>
+			<code>(<a href="#l-bon">BON</a>)(<a href="#l-id">Id</a>){<a href="#v-valid">Valid</a>}{<a href="#v-eo-head">EO-Head</a>}(<a href="#v-content">Content</a>)(<a href="#l-eol">EOL</a>)</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-tail"></a>Tail
+		</td>
+		<td>
+			<br><code>(<a href="#l-whsp">Whsp</a> 0..n)(<a href="#l-eon">EON</a>)(<a href="#l-id">Id</a> 0..1)</code>
+			<br>&emsp;&emsp;*Id* <em>is for human readability only.</em>
+		</td>
+		<td>
+			<code>\NodeName</code>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-valid"></a>Valid<br>(Validation)
+		</td>
+		<td>
+			<code>(<a href="#l-validation-flag">Validation flag</a>){<a href="#v-namespace">Namespace</a> 0..1}{<a href="#v-3mlink">3MLink</a>}</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a name="v-verstruct"></a>VersionStruct<br>(Version structure)
+		</td>
+		<td>
+			<code>(<a href="#l-version-flag">Version flag</a>)(<a href="#l-version-code">Version Code</a>)</code>
+		</td>
+		<td>
+		</td>
+	</tr>
+</table>
+
+
+<h3 id="proposed-and-voted-special-characters-and-character-sets-table-backus-naur-tree-leaves">9.4 Proposed and Voted Special Characters and Character Sets table <br>(Backus-Naur tree leaves)</h3>
+
+<p>This table discussion can be found at <a href="https://devsecops.3ml.io/rfc/discussion">https://devsecops.3ml.io/rfc/discussion</a></p>
+
+
+<table>
+	<tr>
+		<th align="left">
+			Element
+		</th>
+		<th align="left">
+			Description or note
+		</th>
+		<th align="left">
+			Date
+		</th>
+		<th align="left">
+			Current
+			<br>status
+		</th>
+		<th align="left">
+			Character,
+			<br>Character set,
+			<br>Other ref.
+		</th>
+		<th align="left">
+			Justification, <br>arguments
+		</th>
+	</tr>
+	<tr class="odd">
+		<td align="left">
+			<a name="l-3ml-version-id"></a>3ML Version Id
+		</td>
+		<td align="left">
+			3ML version declaration.
+		</td>
+		<td align="left">
+			2017.03.10
+		</td>
+		<td align="left">
+			Imposed
+		</td>
+		<td align="left">
+			"ver"
+		</td>
+		<td align="left">
+			Keeping recurrent known Id as short as possible.
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-3mlink-content-flag"></a>3MLink-content Flag
+		</td>
+		<td align="left">
+			Mark the beginning of the 3MLink content<br>(Node content).
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"@"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="odd">
+		<td align="left">
+			<a name="l-arrayflag"></a>ArrayFlag
+		</td>
+		<td align="left">
+			Mark the beginning of the <em>Array Separator Declaration</em>.
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"#"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-arraysepdeclaration"></a>ArraySepDeclaration<br>(Array Separator Declaration)
+		</td>
+		<td align="left">
+			Character or string used to separate item list.
+		</td>
+		<td align="left">
+			++++ see vx files date
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			Character or string
+			<br> except:
+			<br><a href="#l-eol">EOL</a>.
+			<br>Choose wisely.
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="odd">
+	<td align="left">
+		BON
+	</td>
+		<td align="left">
+			<a name="l-bon"></a>Begin Of Node.
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"/"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-cancel"></a>Cancel<br>(Cancellation)
+		</td>
+		<td align="left">
+			Cancel the whole node
+			<br>(Similar to comment out).
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"*"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-cardinality-flag"></a>Cardinality flag
+		</td>
+		<td align="left">
+			Mark new or modified node.
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"+"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-eo-namespace"></a>EO-Namespace
+		</td>
+		<td align="left">
+			EO-Namespace
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			":"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-eon"></a>EON
+		</td>
+		<td align="left">
+			End Of Node.
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"\"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-eol"></a>EOL
+		</td>
+		<td align="left">
+			End Of Line.
+		</td>
+		<td align="left">
+			
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			Any byte,
+			<br>character
+			<br>or string
+			<br>declared
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-escape-flag"></a>Escape flag
+		</td>
+		<td align="left">
+			Used at the beginning of line to escape special character.
+		</td>
+		<td align="left">
+			
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"^"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-id"></a>Id
+		</td>
+		<td align="left">
+			Node Id.
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			UTF-8 or more:
+			<br>letters
+			<br>digits
+			<br>"-" (dash)
+			<br>"_" (underscore)
+			<br>"." (period)
+			<br>"'" (apostrophe)
+			<br>"%xx" (Percent-encoding: <a href="https://en.wikipedia.org/wiki/Percent-encoding#External_links">Wikipedia</a>)
+			<br>(percent encoding
+			<br>not recommended)
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-namespace-block-id"></a>Namespace Block Id
+		</td>
+		<td align="left">
+			
+		</td>
+		<td align="left">
+			2017.03.22
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"ns"
+		</td>
+		<td align="left">
+			Keeping recurrent known Id as short as possible.
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-non-3ml-content"></a>Non-3ML Content
+		</td>
+		<td align="left">
+			Any non 3ML Code.
+		</td>
+		<td align="left">
+			2017.03.02
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			Characters or strings only
+			<br> except:
+			<br><a href="#l-whsp">whitespace</a>
+			<br><a href="#l-eol">EOL</a>.
+			<br>No binaries.
+		</td>
+		<td align="left">
+			No binary support planned for now.
+			<br>Use 3ML Link, but unlike text, content cannot be imported.
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-non-3mlink-content-flag"></a>Non-3MLink Content Flag
+		</td>
+		<td align="left">
+			Mark the beginning of the 3MLink content<br>(Node content).
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"="
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-occurence-separator"></a>Occurence Separator
+		</td>
+		<td align="left">
+			Separate minimum of maximum of occurences.
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			","
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-occurencemax"></a>OccurenceMax
+		</td>
+		<td align="left">
+			Maximum of child node occurences.
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			Positive integer
+			<br>or infinite if omitted
+		</td>
+		<td align="left">
+			1..1 or 1 is default thus ",1" is omitted.
+			<br>(see <em>OccurenceMin</em>)
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-occurencemin"></a>OccurenceMin
+		</td>
+		<td align="left">
+			Minimum of child node occurence(s).
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			Positive integer
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-placeholder-block-id"></a>Placeholder Block Id
+		</td>
+		<td align="left">
+			Placeholder types are listed in their respective node container, such as those in the <em>Namespace Block Id</em>.
+		</td>
+		<td align="left">
+			2017.03.21
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"ph"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-preprocessing-block-id"></a>Preprocessing Block Id
+		</td>
+		<td align="left">
+			Document preprocessing  instructions.
+		</td>
+		<td align="left">
+			2018.02.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"pre"
+		</td>
+		<td align="left">
+			Keeping recurrent known Id as short as possible.
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-preprocessing-id"></a>Preprocessing Id
+		</td>
+		<td align="left">
+			Preprocessing instructions.
+		</td>
+		<td align="left">
+			N/A
+		</td>
+		<td align="left">
+			N/A
+		</td>
+		<td align="left">
+			N/A
+		</td>
+		<td align="left">
+			See <a href="preprocessing~0.a.1.html">3ML Preprocessing</a>
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-regex-block-id User Defined Placeholder Block "></a>Regex Block Id
+		</td>
+		<td align="left">
+			
+		</td>
+		<td align="left">
+			2017.03.22
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"rg"
+		</td>
+		<td align="left">
+			Keeping recurrent known Id as short as possible.
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-space"></a>Space
+		</td>
+		<td align="left">
+			Standard space byte.
+		</td>
+		<td align="left">
+			N/A
+		</td>
+		<td align="left">
+			Std
+		</td>
+		<td align="left">
+			"&ensp;"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-user-defined-placeholder-block-id"></a>User Defined Placeholder Block Id
+		</td>
+		<td align="left">
+			Placeholder types are listed in their respective node container, such as those in the <em>Namespace Block Id</em>.
+		</td>
+		<td align="left">
+			2017.03.21
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"uph"
+		</td>
+		<td align="left">
+			3ML keeps recurrent known Id as short as possible.
+			<br>See <a href="preprocessing~0.a.1.html">3ML Preprocessing</a>.
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-validation-flag"></a>Validation flag
+		</td>
+		<td align="left">
+			Mark beginning of schema validation pointer
+			<br>(3MLink)
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			":"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-version-code"></a>Version Code
+		</td>
+		<td align="left">
+			From a version code schema
+		</td>
+		<td align="left">
+			++++
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			Any character
+			<br> except:
+			<br><a href="#l-whsp">whitespace</a>
+			<br><a href="#l-eol">EOL</a>
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-version-flag"></a>Version flag
+		</td>
+		<td align="left">
+			Mark beginning of node version.
+		</td>
+		<td align="left">
+			2017.01.25
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			"~"
+		</td>
+		<td align="left">
+			
+		</td>
+	</tr>
+	<tr class="even">
+		<td align="left">
+			<a name="l-whsp"></a>Whsp
+		</td>
+		<td align="left">
+			Space or tab
+		</td>
+		<td align="left">
+			2018.02.27
+		</td>
+		<td align="left">
+			Proposed
+		</td>
+		<td align="left">
+			Space or tab
+		</td>
+		<td align="left">
+			Aligned with XML/HTML.
+		</td>
+	</tr>
+</table>
+
+<h2 id="core-schemas-constraint-declaration">10 <a name="schema"></a>Core Schemas List</h2>
+
+<ul>
+	<li>
+		<a href="versioning.0.a.1.html">3ML Versionning Schema</a>
+	</li>
+	<li>
+		<a href="transform.0.a.1.html">3ML Transforming</a>
+	</li>
+</ul>
+
+
+
+
+<h2 id="operations">11 <a name="operations"></a>3ML Core Operations Libraries</h2>
+
+<ul>
+	<li>
+		<a href="preprocessing.0.a.1.html">Preprocessing</a>
+	</li>
+	<li>
+		<a href="parsing.0.a.1.html">Parsing</a>
+	</li>
+	<li>
+		<a href="lint.0.a.1.html">Linting</a>
+	</li>
+	<li>
+		<a href="pretty.0.a.1.html">Prettyfying</a>
+	</li>
+	<li>
+		<a href="compact~0.a.1.html">Compacting</a>
+	</li>
+	<li>
+		<a href="obsfucate.0.a.1.html">Obsfucate</a>
+	</li>
+	<li>
+		<a href="fingerprint.0.a.1.html">Fingerprinting</a>
+	</li>
+</ul>
+
+
+<h2 id="references">12 <a name="references"></a>References</h2>
+
+
+</body>
+</html>
