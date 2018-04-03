@@ -1,0 +1,74 @@
+/* <non-semantic> */
+.em{font-weight: bold;} /*emphasized*/
+
+ul .no-bullet{list-style-type: none}
+ol .toc{list-style-type: decimal}
+/*
+ * <ref =Stackoverflow/HTML nested ordered list>
+ * src=https://stackoverflow.com/questions/10405945/html-ordered-list-1-1-1-2-nested-counters-and-scope-not-working
+ * timestamp =2018.03.19.06h43UTC
+*/
+ol {
+    counter-reset: item;
+}
+
+ol > li {
+    counter-increment: item;
+}
+
+ol ol > li {
+    display: block;
+}
+
+ol ol > li:before {
+    content: counters(item, ".") ". ";
+    margin-left: -20px;
+}
+/* </ref =Stackoverflow/HTML nested ordered list> */
+
+table {
+	border-collapse: collapse;
+}
+
+td {
+	border: 1px solid gray;
+	padding: 10px;
+}
+
+/* </non-semantic> */
+
+
+/* <semantic> */
+
+.dev {
+	color: rgb(255, 120, 0);
+}
+
+body {
+	line-height: 1.6;
+}
+
+a.active_not {
+	/* <ref =https://css-tricks.com/how-to-disable-links/> */
+	color: rgb(255, 120, 0);
+	cursor: not-allowed;
+	display: inline-block;  /* For IE11/ MS Edge bug */
+	pointer-events: none;
+	text-decoration: none;
+	/* </ref =https://css-tricks.com/how-to-disable-links/> */
+}
+
+code {
+	white-space: pre;
+	font-size: 115%;
+}
+
+code.condensed {
+	font-stretch: condensed;
+}
+
+.doc-title-heading {
+	text-align: center;
+}
+
+/* </semantic>*/
